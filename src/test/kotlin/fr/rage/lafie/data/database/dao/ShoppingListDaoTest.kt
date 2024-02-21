@@ -1,6 +1,5 @@
-package fr.lafie.rage.data.database.dao
+package fr.rage.lafie.data.database.dao
 
-import fr.rage.lafie.data.database.dao.ShoppingListDao
 import fr.rage.lafie.data.database.entity.ShoppingListEntity
 import fr.rage.lafie.data.database.table.ShoppingListTable
 import org.jetbrains.exposed.sql.transactions.transaction

@@ -5,6 +5,9 @@ val exposed_version: String by project
 val h2_version: String by project
 val coroutines_version: String by project
 val postgresql_version: String by project
+val mockk_version: String by project
+val koin_version: String by project
+val jupiter_version: String by project
 
 plugins {
     kotlin("jvm") version "1.9.22"
@@ -30,11 +33,15 @@ dependencies {
     // KTor server
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
-    implementation("io.ktor:ktor-server-config-yaml:2.3.8")
+    implementation("io.ktor:ktor-server-config-yaml:${ktor_version}")
 
     // Content negotiation
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
+
+    // Dependencies injection
+    implementation("io.insert-koin:koin-ktor:$koin_version")
+    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
 
     // Database
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
@@ -47,7 +54,12 @@ dependencies {
 
     // Units tests
     testImplementation("io.ktor:ktor-server-tests-jvm")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    testImplementation("org.junit.jupiter:junit-jupiter:${jupiter_version}")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
+    testImplementation("io.mockk:mockk:$mockk_version")
     testImplementation("com.h2database:h2:$h2_version")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

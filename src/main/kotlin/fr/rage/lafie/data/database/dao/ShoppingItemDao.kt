@@ -1,6 +1,7 @@
 package fr.rage.lafie.data.database.dao
 
 import fr.rage.lafie.data.database.entity.ShoppingItemEntity
+import fr.rage.lafie.data.database.entity.ShoppingListEntity
 import org.jetbrains.exposed.sql.Database
 
 class ShoppingItemDao(
@@ -9,12 +10,17 @@ class ShoppingItemDao(
     entityClass = ShoppingItemEntity,
     database = database,
 ) {
-    override suspend fun create(item: ShoppingItemEntity): ShoppingItemEntity = runDbQuery {
+    suspend fun create(
+        label: String,
+        count: Float,
+        unit: String,
+        shoppingList: ShoppingListEntity,
+    ): ShoppingItemEntity = runDbQuery {
         ShoppingItemEntity.new {
-            this.label = item.label
-            this.unit = item.unit
-            this.count = item.count
-            this.shoppingList = item.shoppingList
+            this.label = label
+            this.unit = unit
+            this.count = count
+            this.shoppingList = shoppingList
         }
     }
 

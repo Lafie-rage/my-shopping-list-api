@@ -5,11 +5,11 @@ import org.jetbrains.exposed.sql.Database
 
 class ShoppingListDao(
     database: Database,
-): BaseDao<ShoppingListEntity>(
+) : BaseDao<ShoppingListEntity>(
     entityClass = ShoppingListEntity,
     database = database,
 ) {
-    override suspend fun create(item: ShoppingListEntity): ShoppingListEntity = runDbQuery {
+    suspend fun create(): ShoppingListEntity = runDbQuery {
         ShoppingListEntity.new {
         }
     }

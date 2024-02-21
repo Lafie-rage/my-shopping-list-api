@@ -12,8 +12,6 @@ abstract class BaseDao<E : UUIDEntity>(
     private val entityClass: UUIDEntityClass<E>
 ) {
 
-    abstract suspend fun create(item: E): E
-
     suspend fun getById(id: UUID): E? = runDbQuery {
         entityClass.findById(id)
     }

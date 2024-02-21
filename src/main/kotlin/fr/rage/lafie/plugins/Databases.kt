@@ -10,7 +10,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgresql.Driver
 
 fun Application.configureDatabases() {
-
     val host: String = environment.config.propertyOrNull("database.host")?.getString()
         ?: throw UnableToAccessDatabaseException("No host defined")
     val name: String = environment.config.propertyOrNull("database.name")?.getString()

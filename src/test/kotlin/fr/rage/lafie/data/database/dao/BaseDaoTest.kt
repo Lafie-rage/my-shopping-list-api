@@ -1,6 +1,5 @@
-package fr.lafie.rage.data.database.dao
+package fr.rage.lafie.data.database.dao
 
-import fr.rage.lafie.data.database.dao.BaseDao
 import kotlinx.coroutines.test.runTest
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -8,7 +7,9 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
-import kotlin.test.*
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 abstract class BaseDaoTest<D : BaseDao<E>, E : UUIDEntity>(
     private val entityClass: UUIDEntityClass<E>,
@@ -22,7 +23,7 @@ abstract class BaseDaoTest<D : BaseDao<E>, E : UUIDEntity>(
         password = ""
     )
 
-    @BeforeTest
+    @BeforeEach
     fun setUpSchemas() {
         transaction(database) {
             SchemaUtils.create(*tables)
@@ -32,14 +33,14 @@ abstract class BaseDaoTest<D : BaseDao<E>, E : UUIDEntity>(
     @Test
     fun `try to create an item then search it expecting it to exist`() {
         val item = `create an item to test a retrieve function`()
-        transaction(database) { assertNotNull(entityClass.findById(item.id.value)) }
+        transaction(database) { Assertions.assertNotNull(entityClass.findById(item.id.value)) }
     }
 
     @Test
     fun `try to get an item by its ID after inserting it excepting to be found`() = runTest {
         val item = `create an item to test a retrieve function`()
         val result = dao.getById(item.id.value)
-        assertEquals(item, result)
+        Assertions.assertEquals(item, result)
     }
 
     @Test
@@ -47,11 +48,11 @@ abstract class BaseDaoTest<D : BaseDao<E>, E : UUIDEntity>(
         val item = `create an item to test a retrieve function`()
         val itemId = item.id.value
         transaction(database) {
-            assertNotNull(entityClass.findById(itemId))
+            Assertions.assertNotNull(entityClass.findById(itemId))
         }
         dao.delete(itemId)
         transaction(database) {
-            assertNull(entityClass.findById(itemId))
+            Assertions.assertNull(entityClass.findById(itemId))
         }
     }
 
