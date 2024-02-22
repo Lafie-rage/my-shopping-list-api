@@ -1,5 +1,8 @@
 package fr.rage.lafie.service
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNotNull
 import fr.rage.lafie.data.database.entity.ShoppingItemEntity
 import fr.rage.lafie.data.database.entity.ShoppingListEntity
 import fr.rage.lafie.dto.request.ShoppingItemToCreate
@@ -12,7 +15,6 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
@@ -39,7 +41,7 @@ class ShoppingItemServiceTest {
         mockkStatic(ShoppingItemEntity::toDto)
 
         // Mock
-        coEvery { shoppingListRepository.getByIdOrCreate(any()) } returns shoppingList
+        coEvery { shoppingListRepository.getById(any()) } returns shoppingList
         every { shoppingItemToCreate.label } returns "label"
         every { shoppingItemToCreate.count } returns 0f
         every { shoppingItemToCreate.unit } returns "unit"
@@ -51,10 +53,10 @@ class ShoppingItemServiceTest {
         val result = service.createItemOnListShoppingList(UUID.randomUUID(), shoppingItemToCreate)
 
         // Assert
-        assertEquals(shoppingItem, result)
+        assertThat(result).isNotNull().isEqualTo(shoppingItem)
 
         // Verify
-        coVerify { shoppingListRepository.getByIdOrCreate(any()) }
+        coVerify { shoppingListRepository.getById(any()) }
         verify { shoppingItemToCreate.label }
         verify { shoppingItemToCreate.count }
         verify { shoppingItemToCreate.unit }
@@ -63,7 +65,7 @@ class ShoppingItemServiceTest {
     }
 
     @Test
-    fun getById() = runTest {
+    fun `Get a shopping item by its ID and expect it to be returned`() = runTest {
         // Init
         val shoppingItemEntity = mockk<ShoppingItemEntity>()
         val shoppingItem = mockk<ShoppingItem>()
@@ -77,7 +79,7 @@ class ShoppingItemServiceTest {
         val result = service.getById(UUID.randomUUID())
 
         // Assert
-        assertEquals(shoppingItem, result)
+        assertThat(result).isNotNull().isEqualTo(shoppingItem)
 
         // Verify
         coVerify { repository.getById(any()) }

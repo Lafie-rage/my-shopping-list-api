@@ -1,7 +1,10 @@
 package fr.rage.lafie.dto
 
-abstract class BaseShoppingItem(
-    open val label: String,
-    open val count: Float,
-    open val unit: String,
-)
+import kotlinx.serialization.Serializable
+
+@Serializable
+abstract class BaseShoppingItem {
+    abstract val label: String
+    abstract val count: Float
+    abstract val unit: String
+}

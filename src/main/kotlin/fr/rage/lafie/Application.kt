@@ -1,6 +1,7 @@
 package fr.rage.lafie
 
 import fr.rage.lafie.plugins.configureDatabases
+import fr.rage.lafie.plugins.configureRequestValidation
 import fr.rage.lafie.plugins.configureSerialization
 import fr.rage.lafie.plugins.di.configureKoin
 import fr.rage.lafie.plugins.routing.configureRouting
@@ -15,5 +16,6 @@ fun Application.module() {
     configureDatabases()
     configureKoin()
     configureSerialization()
+    configureRequestValidation()
     configureRouting()
 }

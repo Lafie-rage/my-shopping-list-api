@@ -6,6 +6,7 @@ ktor:
     port: 8080
 database:
   host: $DB_HOST
-  name: $DB_NAME
   username: $DB_USER
   password: $DB_PASSWORD
+  engine: postgresql
+  driver: org.postgresql.Driver

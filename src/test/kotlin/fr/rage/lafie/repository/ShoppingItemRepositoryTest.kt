@@ -1,5 +1,8 @@
 package fr.rage.lafie.repository
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNotNull
 import fr.rage.lafie.data.database.dao.ShoppingItemDao
 import fr.rage.lafie.data.database.entity.ShoppingItemEntity
 import fr.rage.lafie.data.database.entity.ShoppingListEntity
@@ -10,7 +13,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
@@ -41,7 +43,7 @@ class ShoppingItemRepositoryTest {
         )
 
         // Assert
-        Assertions.assertEquals(shoppingItemEntity, result)
+        assertThat(result).isNotNull().isEqualTo(shoppingItemEntity)
 
         // Verify
         coVerify { dao.create(any(), any(), any(), any()) }
@@ -59,7 +61,7 @@ class ShoppingItemRepositoryTest {
         val result = repository.getById(UUID.randomUUID())
 
         // Assert
-        Assertions.assertEquals(shoppingItemEntity, result)
+        assertThat(result).isNotNull().isEqualTo(shoppingItemEntity)
 
         // Verify
         coVerify { dao.getById(any()) }

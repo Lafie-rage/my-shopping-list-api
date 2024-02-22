@@ -11,6 +11,7 @@ class ShoppingListDao(
 ) {
     suspend fun create(): ShoppingListEntity = runDbQuery {
         ShoppingListEntity.new {
+            this.id._value = id
         }
     }
 

@@ -1,5 +1,9 @@
 package fr.rage.lafie.data.database.dao
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNotNull
+import assertk.assertions.isNull
 import kotlinx.coroutines.test.runTest
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -7,7 +11,6 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -33,14 +36,14 @@ abstract class BaseDaoTest<D : BaseDao<E>, E : UUIDEntity>(
     @Test
     fun `try to create an item then search it expecting it to exist`() {
         val item = `create an item to test a retrieve function`()
-        transaction(database) { Assertions.assertNotNull(entityClass.findById(item.id.value)) }
+        transaction(database) { assertThat(entityClass.findById(item.id.value)).isNotNull() }
     }
 
     @Test
     fun `try to get an item by its ID after inserting it excepting to be found`() = runTest {
         val item = `create an item to test a retrieve function`()
         val result = dao.getById(item.id.value)
-        Assertions.assertEquals(item, result)
+        assertThat(result).isNotNull().isEqualTo(item)
     }
 
     @Test
@@ -48,11 +51,11 @@ abstract class BaseDaoTest<D : BaseDao<E>, E : UUIDEntity>(
         val item = `create an item to test a retrieve function`()
         val itemId = item.id.value
         transaction(database) {
-            Assertions.assertNotNull(entityClass.findById(itemId))
+            assertThat(entityClass.findById(itemId)).isNotNull()
         }
         dao.delete(itemId)
         transaction(database) {
-            Assertions.assertNull(entityClass.findById(itemId))
+            assertThat(entityClass.findById(itemId)).isNull()
         }
     }
 

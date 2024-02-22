@@ -8,6 +8,7 @@ val postgresql_version: String by project
 val mockk_version: String by project
 val koin_version: String by project
 val jupiter_version: String by project
+val assertk_version: String by project
 
 plugins {
     kotlin("jvm") version "1.9.22"
@@ -33,7 +34,16 @@ dependencies {
     // KTor server
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
-    implementation("io.ktor:ktor-server-config-yaml:${ktor_version}")
+    implementation("io.ktor:ktor-server-config-yaml:$ktor_version")
+
+    // Requests Validation
+    implementation("io.ktor:ktor-server-request-validation:$ktor_version")
+
+    // Resources
+    implementation("io.ktor:ktor-server-resources:$ktor_version")
+
+    // Status pages
+    implementation("io.ktor:ktor-server-status-pages:$ktor_version")
 
     // Content negotiation
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
@@ -58,6 +68,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
     testImplementation("io.mockk:mockk:$mockk_version")
     testImplementation("com.h2database:h2:$h2_version")
+    testImplementation("io.insert-koin:koin-test:$koin_version")
+    testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
+    testImplementation("com.willowtreeapps.assertk:assertk:$assertk_version")
 }
 
 tasks.withType<Test> {

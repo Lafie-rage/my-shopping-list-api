@@ -1,7 +1,5 @@
 package fr.rage.lafie.plugins.di
 
-import fr.rage.lafie.controller.ShoppingItemController
-import fr.rage.lafie.controller.ShoppingListController
 import fr.rage.lafie.data.database.dao.ShoppingItemDao
 import fr.rage.lafie.data.database.dao.ShoppingListDao
 import fr.rage.lafie.repository.ShoppingItemRepository
@@ -21,7 +19,6 @@ fun Application.configureKoin() {
             daoModule,
             repositoryModule,
             serviceModule,
-            controllerModule,
         )
     }
 }
@@ -48,14 +45,5 @@ val serviceModule = module {
     }
     single {
         ShoppingListService(get())
-    }
-}
-
-val controllerModule = module {
-    single {
-        ShoppingItemController(get())
-    }
-    single {
-        ShoppingListController(get())
     }
 }
