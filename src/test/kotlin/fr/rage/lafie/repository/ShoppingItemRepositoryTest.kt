@@ -1,6 +1,7 @@
 package fr.rage.lafie.repository
 
 import assertk.assertThat
+import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import fr.rage.lafie.data.database.dao.ShoppingItemDao
@@ -65,5 +66,28 @@ class ShoppingItemRepositoryTest {
 
         // Verify
         coVerify { dao.getById(any()) }
+    }
+
+    @Test
+    fun `Get shopping items by their associated shopping list id and expect them to be returned`() = runTest {
+        // Init
+        val firstShoppingItemEntity = mockk<ShoppingItemEntity>()
+        val secondShoppingItemEntity = mockk<ShoppingItemEntity>()
+        val shoppingItems = listOf(firstShoppingItemEntity, secondShoppingItemEntity)
+
+        // Mock
+        coEvery { dao.getByShoppingListId(any()) } returns shoppingItems
+
+        // Exec
+        val result = repository.getByShoppingListId(UUID.randomUUID())
+
+        // Assert
+        assertThat(result).isNotNull().containsExactly(
+            firstShoppingItemEntity,
+            secondShoppingItemEntity,
+        )
+
+        // Verify
+        coVerify { dao.getByShoppingListId(any()) }
     }
 }

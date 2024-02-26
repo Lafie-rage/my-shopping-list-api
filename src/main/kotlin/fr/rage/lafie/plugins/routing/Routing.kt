@@ -8,5 +8,6 @@ fun Application.configureRouting() {
     install(Resources)
     routing {
         configureShoppingItemRouting()
+        configureShoppingListRouting()
     }
 }

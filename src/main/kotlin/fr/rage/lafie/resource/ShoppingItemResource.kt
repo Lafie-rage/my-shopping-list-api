@@ -17,6 +17,7 @@ class ShoppingItems {
 
     @Resource("")
     class AddOnShoppingList(
+        val parent: ShoppingItems = ShoppingItems(),
         @Serializable(with = UUIDSerializer::class)
         val shoppingListId: UUID,
     )

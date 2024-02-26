@@ -3,7 +3,6 @@ package fr.rage.lafie.repository
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
-import assertk.assertions.isNull
 import fr.rage.lafie.data.database.dao.ShoppingListDao
 import fr.rage.lafie.data.database.entity.ShoppingListEntity
 import io.mockk.coEvery
@@ -35,7 +34,7 @@ class ShoppingListRepositoryTest {
         coEvery { dao.getById(any()) } returns shoppingList
 
         // Exec
-        val result = repository.getById(UUID.randomUUID())
+        val result = repository.getByIdOrCreate(UUID.randomUUID())
 
         // Assert
         assertThat(result).isNotNull().isEqualTo(shoppingList)
@@ -46,32 +45,22 @@ class ShoppingListRepositoryTest {
 
 
     @Test
-    fun `Get a shopping list by its ID and expect it to be not found`() = runTest {
-        // Mock
-        coEvery { dao.getById(any()) } returns null
-
-        // Exec
-        val result = repository.getById(UUID.randomUUID())
-
-        // Assert
-        assertThat(result).isNull()
-
-        // Verify
-        coVerify { dao.getById(any()) }
-    }
-
-    @Test
-    fun `Create a shopping list and expect it to be returned`() = runTest {
+    fun `Get a shopping list by its ID and expect it to be not found and to be created then returned`() = runTest {
         // Init
         val shoppingList = mockk<ShoppingListEntity>()
 
         // Mock
-        coEvery { dao.create() } returns shoppingList
+        coEvery { dao.getById(any()) } returns null
+        coEvery { dao.create(any()) } returns shoppingList
 
         // Exec
-        val result = repository.create()
+        val result = repository.getByIdOrCreate(UUID.randomUUID())
 
         // Assert
         assertThat(result).isNotNull().isEqualTo(shoppingList)
+
+        // Verify
+        coVerify { dao.getById(any()) }
+        coVerify { dao.create(any()) }
     }
 }

@@ -1,6 +1,7 @@
 package fr.rage.lafie.service
 
 import assertk.assertThat
+import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import fr.rage.lafie.data.database.entity.ShoppingItemEntity
@@ -41,7 +42,7 @@ class ShoppingItemServiceTest {
         mockkStatic(ShoppingItemEntity::toDto)
 
         // Mock
-        coEvery { shoppingListRepository.getById(any()) } returns shoppingList
+        coEvery { shoppingListRepository.getByIdOrCreate(any()) } returns shoppingList
         every { shoppingItemToCreate.label } returns "label"
         every { shoppingItemToCreate.count } returns 0f
         every { shoppingItemToCreate.unit } returns "unit"
@@ -56,7 +57,7 @@ class ShoppingItemServiceTest {
         assertThat(result).isNotNull().isEqualTo(shoppingItem)
 
         // Verify
-        coVerify { shoppingListRepository.getById(any()) }
+        coVerify { shoppingListRepository.getByIdOrCreate(any()) }
         verify { shoppingItemToCreate.label }
         verify { shoppingItemToCreate.count }
         verify { shoppingItemToCreate.unit }
@@ -84,5 +85,36 @@ class ShoppingItemServiceTest {
         // Verify
         coVerify { repository.getById(any()) }
         verify { shoppingItemEntity.toDto() }
+    }
+
+    @Test
+    fun `Get shopping items using their associated shopping list id and expect them to be returned`() = runTest {
+        // Init
+        val firstShoppingItemEntity = mockk<ShoppingItemEntity>()
+        val firstShoppingItem = mockk<ShoppingItem>()
+        val secondShoppingItemEntity = mockk<ShoppingItemEntity>()
+        val secondShoppingItem = mockk<ShoppingItem>()
+        val shoppingItems = listOf(firstShoppingItemEntity, secondShoppingItemEntity)
+        mockkStatic(ShoppingItemEntity::toDto)
+
+        // Mock
+        coEvery { repository.getByShoppingListId(any()) } returns shoppingItems
+        every { firstShoppingItemEntity.toDto() } returns firstShoppingItem
+        every { secondShoppingItemEntity.toDto() } returns secondShoppingItem
+
+        // Exec
+        val result = service.getByShoppingListId(UUID.randomUUID())
+
+        // Assert
+        assertThat(result).isNotNull()
+            .containsExactly(
+                firstShoppingItem,
+                secondShoppingItem,
+            )
+
+        // Verify
+        coVerify { repository.getByShoppingListId(any()) }
+        verify { firstShoppingItemEntity.toDto() }
+        verify { secondShoppingItemEntity.toDto() }
     }
 }

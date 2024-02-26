@@ -7,7 +7,5 @@ import java.util.*
 class ShoppingListRepository(
     private val dao: ShoppingListDao,
 ) {
-    suspend fun getById(id: UUID): ShoppingListEntity? = dao.getById(id)
-
-    suspend fun create(): ShoppingListEntity = dao.create()
+    suspend fun getByIdOrCreate(id: UUID): ShoppingListEntity = dao.getById(id) ?: dao.create(id)
 }

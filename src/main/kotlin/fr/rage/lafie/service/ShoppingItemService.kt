@@ -2,7 +2,6 @@ package fr.rage.lafie.service
 
 import fr.rage.lafie.dto.request.ShoppingItemToCreate
 import fr.rage.lafie.dto.response.ShoppingItem
-import fr.rage.lafie.exception.not.found.ShoppingListNotFoundException
 import fr.rage.lafie.mapper.toDto
 import fr.rage.lafie.repository.ShoppingItemRepository
 import fr.rage.lafie.repository.ShoppingListRepository
@@ -16,8 +15,7 @@ class ShoppingItemService(
         shoppingListId: UUID,
         shoppingItem: ShoppingItemToCreate,
     ): ShoppingItem {
-        val shoppingList = shoppingListRepository.getById(shoppingListId)
-            ?: throw ShoppingListNotFoundException(shoppingListId)
+        val shoppingList = shoppingListRepository.getByIdOrCreate(shoppingListId)
         return repository.create(
             label = shoppingItem.label,
             count = shoppingItem.count,
@@ -27,4 +25,7 @@ class ShoppingItemService(
     }
 
     suspend fun getById(id: UUID): ShoppingItem? = repository.getById(id)?.toDto()
+
+    suspend fun getByShoppingListId(shoppingListId: UUID): List<ShoppingItem> =
+        repository.getByShoppingListId(shoppingListId).map { it.toDto() }
 }

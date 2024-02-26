@@ -21,4 +21,6 @@ class ShoppingItemRepository(
     )
 
     suspend fun getById(id: UUID): ShoppingItemEntity? = dao.getById(id)
+    suspend fun getByShoppingListId(shoppingListId: UUID): List<ShoppingItemEntity> =
+        dao.getByShoppingListId(shoppingListId)
 }

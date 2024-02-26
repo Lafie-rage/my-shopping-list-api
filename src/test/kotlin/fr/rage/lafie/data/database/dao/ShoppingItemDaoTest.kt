@@ -19,7 +19,7 @@ class ShoppingItemDaoTest : BaseDaoTest<ShoppingItemDao, ShoppingItemEntity>(
             this.label = "label"
             this.count = 0f
             this.unit = "unit"
-            this.shoppingList = shoppingList
+            this.shoppingListId = shoppingList.id
         }
     }
 }

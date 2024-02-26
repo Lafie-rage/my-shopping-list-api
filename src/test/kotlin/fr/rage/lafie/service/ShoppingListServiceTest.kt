@@ -24,27 +24,9 @@ class ShoppingListServiceTest {
     @MockK
     private lateinit var repository: ShoppingListRepository
 
-    @Test
-    fun `Create a shopping list and expect it to be returned`() = runTest {
-        // Init
-        val shoppingListEntity = mockk<ShoppingListEntity>()
-        val shoppingList = mockk<ShoppingList>()
-        mockkStatic(ShoppingListEntity::toDto)
+    @MockK
+    private lateinit var shoppingItemService: ShoppingItemService
 
-        // Mock
-        coEvery { repository.create() } returns shoppingListEntity
-        every { shoppingListEntity.toDto() } returns shoppingList
-
-        // Exec
-        val result = service.create()
-
-        // Assert
-        assertThat(result).isNotNull().isEqualTo(shoppingList)
-
-        // Verify
-        coVerify { repository.create() }
-        verify { shoppingListEntity.toDto() }
-    }
 
     @Test
     fun `Get a shopping list by its ID and expect it to be returned`() = runTest {
@@ -54,17 +36,19 @@ class ShoppingListServiceTest {
         mockkStatic(ShoppingListEntity::toDto)
 
         // Mock
-        coEvery { repository.getById(any()) } returns shoppingListEntity
-        every { shoppingListEntity.toDto() } returns shoppingList
+        coEvery { repository.getByIdOrCreate(any()) } returns shoppingListEntity
+        coEvery { shoppingItemService.getByShoppingListId(any()) } returns listOf()
+        every { shoppingListEntity.toDto(any()) } returns shoppingList
 
         // Exec
-        val result = service.getById(UUID.randomUUID())
+        val result = service.getByIdOrCreate(UUID.randomUUID())
 
         // Assert
         assertThat(result).isNotNull().isEqualTo(shoppingList)
 
         // Verify
-        coVerify { repository.getById(any()) }
-        verify { shoppingListEntity.toDto() }
+        coVerify { repository.getByIdOrCreate(any()) }
+        coVerify { shoppingItemService.getByShoppingListId(any()) }
+        verify { shoppingListEntity.toDto(any()) }
     }
 }

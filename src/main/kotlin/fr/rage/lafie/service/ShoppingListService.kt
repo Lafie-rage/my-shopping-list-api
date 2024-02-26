@@ -7,8 +7,10 @@ import java.util.*
 
 class ShoppingListService(
     private val repository: ShoppingListRepository,
+    private val shoppingListService: ShoppingItemService,
 ) {
-    suspend fun getById(id: UUID): ShoppingList? = repository.getById(id)?.toDto()
-
-    suspend fun create(): ShoppingList = repository.create().toDto()
+    suspend fun getByIdOrCreate(id: UUID): ShoppingList {
+        val shoppingListEntity = repository.getByIdOrCreate(id)
+        return shoppingListEntity.toDto(shoppingListService.getByShoppingListId(id))
+    }
 }

@@ -10,10 +10,8 @@ class ShoppingLists {
 
     @Resource("{id}")
     class ById(
+        val parent: ShoppingLists = ShoppingLists(),
         @Serializable(with = UUIDSerializer::class)
         val id: UUID,
     )
-
-    @Resource("")
-    class Create
 }

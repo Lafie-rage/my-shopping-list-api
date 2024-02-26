@@ -44,6 +44,6 @@ val serviceModule = module {
         ShoppingItemService(get(), get())
     }
     single {
-        ShoppingListService(get())
+        ShoppingListService(get(), get())
     }
 }

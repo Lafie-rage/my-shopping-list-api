@@ -6,28 +6,26 @@ import fr.rage.lafie.resource.ShoppingItems
 import fr.rage.lafie.service.ShoppingItemService
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.routing.post
 import org.koin.ktor.ext.inject
 
 fun Routing.configureShoppingItemRouting() {
     val service by inject<ShoppingItemService>()
 
-    route("shopping-items") {
-        createShoppingItem(service)
-        getShoppingItemById(service)
-    }
+    createShoppingItem(service)
+    getShoppingItemById(service)
 }
 
 private fun Route.createShoppingItem(service: ShoppingItemService) {
-    post<ShoppingItems.AddOnShoppingList> { params ->
+    post<ShoppingItems.AddOnShoppingList, ShoppingItemToCreate> { params, shoppingItemToCreate ->
         val shoppingListId = params.shoppingListId
-        val shoppingItemToCreate = call.receive<ShoppingItemToCreate>()
 
-        val shoppingItem = service.createItemOnListShoppingList(shoppingListId, shoppingItemToCreate)
+        val shoppingItem = service.createItemOnListShoppingList(
+            shoppingListId,
+            shoppingItemToCreate
+        )
 
         call.respond(
             status = HttpStatusCode.Created,

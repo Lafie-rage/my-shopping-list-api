@@ -13,7 +13,7 @@ class ShoppingItemEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     var count by ShoppingItemTable.count
     var unit by ShoppingItemTable.unit
     var shoppingListId by ShoppingItemTable.shoppingListId
-    var shoppingList by ShoppingListEntity referencedOn ShoppingItemTable.shoppingListId
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -24,7 +24,6 @@ class ShoppingItemEntity(id: EntityID<UUID>) : UUIDEntity(id) {
         if (label != other.label) return false
         if (count != other.count) return false
         if (unit != other.unit) return false
-        if (shoppingListId != other.shoppingListId) return false
 
         return true
     }
@@ -34,7 +33,6 @@ class ShoppingItemEntity(id: EntityID<UUID>) : UUIDEntity(id) {
         result = 31 * result + label.hashCode()
         result = 31 * result + count.hashCode()
         result = 31 * result + unit.hashCode()
-        result = 31 * result + shoppingListId.hashCode()
         return result
     }
 
