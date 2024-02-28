@@ -5,6 +5,7 @@ val exposed_version: String by project
 val h2_version: String by project
 val coroutines_version: String by project
 val postgresql_version: String by project
+val mysql_version: String by project
 val mockk_version: String by project
 val koin_version: String by project
 val jupiter_version: String by project
@@ -57,7 +58,9 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
-    implementation("org.postgresql:postgresql:$postgresql_version")
+    implementation("org.postgresql:postgresql:$postgresql_version") // PostgreSQL
+    implementation("com.mysql:mysql-connector-j:$mysql_version") // MySQL
+
 
     // Logging
     implementation("ch.qos.logback:logback-classic:$logback_version")

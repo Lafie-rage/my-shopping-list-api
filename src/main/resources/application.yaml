@@ -8,5 +8,5 @@ database:
   host: $DB_HOST
   username: $DB_USER
   password: $DB_PASSWORD
-  engine: postgresql
-  driver: org.postgresql.Driver
+  engine: $DB_ENGINE
+  driver: $DB_DRIVER
