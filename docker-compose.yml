@@ -1,0 +1,36 @@
+services:
+  my-shopping-list-api:
+    image: "my-shopping-list-api"
+    environment:
+      DB_HOST: mysql-db:3306
+      DB_NAME: $MY_SHOPPING_LIST_DB_NAME
+      DB_USER: $MY_SHOPPING_LIST_DB_USER
+      DB_PASSWORD: $MY_SHOPPING_LIST_DB_PASSWORD
+      DB_ENGINE: mysql
+      DB_DRIVER: com.mysql.cj.jdbc.Driver
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    ports:
+      - '5632:8080'
+
+  mysql-db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MY_SHOPPING_LIST_DB_ROOT_PASSWORD
+      MYSQL_DATABASE: $MY_SHOPPING_LIST_DB_NAME
+      MYSQL_USER: $MY_SHOPPING_LIST_DB_USER
+      MYSQL_PASSWORD: $MY_SHOPPING_LIST_DB_PASSWORD
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - './data/db/data:/var/lib/mysql'
+      - './data/db/my.cnf:/etc/mysql/conf.d/my.cnf'
+      - './data/db/sql:/docker-entrypoint-initdb.d'
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10

@@ -10,7 +10,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureDatabases() {
     val host: String = environment.config.propertyOrNull("database.host")?.getString()
-        ?: throw UnableToAccessDatabaseException("No host defined")
+        ?: throw UnableToAccessDatabaseException("No database host defined")
+    val name: String = environment.config.propertyOrNull("database.name")?.getString()
+        ?: throw UnableToAccessDatabaseException("No database name defined")
     val username: String = environment.config.propertyOrNull("database.username")?.getString()
         ?: throw UnableToAccessDatabaseException("No database username defined")
     val password: String = environment.config.propertyOrNull("database.password")?.getString()
@@ -21,7 +23,7 @@ fun Application.configureDatabases() {
         ?: throw UnableToAccessDatabaseException("No database driver defined")
 
     val database = Database.connect(
-        url = "jdbc:$engine:$host",
+        url = "jdbc:$engine://$host/$name",
         user = username,
         driver = driver,
         password = password

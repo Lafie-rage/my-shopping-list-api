@@ -79,3 +79,11 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+ktor {
+    docker {
+        jreVersion.set(JavaVersion.VERSION_17)
+        localImageName.set("my-shopping-list-api")
+        imageTag.set("1.0.0")
+    }
+}
