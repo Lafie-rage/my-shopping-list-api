@@ -2,31 +2,17 @@ package fr.rage.lafie.plugins
 
 import fr.rage.lafie.data.database.table.ShoppingItemTable
 import fr.rage.lafie.data.database.table.ShoppingListTable
-import fr.rage.lafie.exception.UnableToAccessDatabaseException
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureDatabases() {
-    val host: String = environment.config.propertyOrNull("database.host")?.getString()
-        ?: throw UnableToAccessDatabaseException("No database host defined")
-    val name: String = environment.config.propertyOrNull("database.name")?.getString()
-        ?: throw UnableToAccessDatabaseException("No database name defined")
-    val username: String = environment.config.propertyOrNull("database.username")?.getString()
-        ?: throw UnableToAccessDatabaseException("No database username defined")
-    val password: String = environment.config.propertyOrNull("database.password")?.getString()
-        ?: throw UnableToAccessDatabaseException("No database password defined")
-    val engine: String = environment.config.propertyOrNull("database.engine")?.getString()
-        ?: throw UnableToAccessDatabaseException("No database engine defined")
-    val driver: String = environment.config.propertyOrNull("database.driver")?.getString()
-        ?: throw UnableToAccessDatabaseException("No database driver defined")
-
     val database = Database.connect(
-        url = "jdbc:$engine://$host/$name",
-        user = username,
-        driver = driver,
-        password = password
+        url = "jdbc:h2:mem:my-shopping-list-db;DB_CLOSE_DELAY=-1",
+        user = "root",
+        driver = "org.h2.Driver",
+        password = "",
     )
 
     initSchemas(database)

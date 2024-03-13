@@ -58,8 +58,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
-    implementation("org.postgresql:postgresql:$postgresql_version") // PostgreSQL
-    implementation("com.mysql:mysql-connector-j:$mysql_version") // MySQL
+    implementation("com.h2database:h2:$h2_version")
 
 
     // Logging
@@ -70,7 +69,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:${jupiter_version}")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
     testImplementation("io.mockk:mockk:$mockk_version")
-    testImplementation("com.h2database:h2:$h2_version")
     testImplementation("io.insert-koin:koin-test:$koin_version")
     testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
     testImplementation("com.willowtreeapps.assertk:assertk:$assertk_version")
