@@ -4,9 +4,11 @@ import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
+import assertk.assertions.isNull
 import fr.rage.lafie.data.database.entity.ShoppingItemEntity
 import fr.rage.lafie.data.database.entity.ShoppingListEntity
 import fr.rage.lafie.dto.request.ShoppingItemToCreate
+import fr.rage.lafie.dto.request.UpdateShoppingItemRequest
 import fr.rage.lafie.dto.response.ShoppingItem
 import fr.rage.lafie.mapper.toDto
 import fr.rage.lafie.repository.ShoppingItemRepository
@@ -116,5 +118,65 @@ class ShoppingItemServiceTest {
         coVerify { repository.getByShoppingListId(any()) }
         verify { firstShoppingItemEntity.toDto() }
         verify { secondShoppingItemEntity.toDto() }
+    }
+
+    @Test
+    fun `update an item and expect the changes to be proceeded`() = runTest {
+        // Init
+        val shoppingItemEntity = mockk<ShoppingItemEntity>()
+        val shoppingItem = mockk<ShoppingItem>()
+        val request = mockk<UpdateShoppingItemRequest>()
+        mockkStatic(ShoppingItemEntity::toDto)
+
+        // Mock
+        coEvery { repository.update(any(), any(), any(), any()) } returns shoppingItemEntity
+        every { request.label } returns "label"
+        every { request.count } returns 0f
+        every { request.unit } returns "unit"
+        every { shoppingItemEntity.toDto() } returns shoppingItem
+
+        // Exec
+        val result = service.update(UUID.randomUUID(), request)
+
+        // Assert
+        assertThat(result).isNotNull()
+            .isEqualTo(shoppingItem)
+
+        // Verify
+        coVerify { repository.update(any(), any(), any(), any()) }
+        verify { request.label }
+        verify { request.count }
+        verify { request.unit }
+        verify { shoppingItemEntity.toDto() }
+    }
+
+    @Test
+    fun `delete an existing item and expect it to be deleted`() = runTest {
+        // Mock
+        coEvery { repository.delete(any()) } returns Unit
+
+        // Exec
+        val result = service.deleteById(UUID.randomUUID())
+
+        // Assert
+        assertThat(result).isNotNull()
+
+        // Verify
+        coVerify { repository.delete(any()) }
+    }
+
+    @Test
+    fun `delete an nonexistent item and expect it to say that it did not exist`() = runTest {
+        // Mock
+        coEvery { repository.delete(any()) } returns null
+
+        // Exec
+        val result = service.deleteById(UUID.randomUUID())
+
+        // Assert
+        assertThat(result).isNull()
+
+        // Verify
+        coVerify { repository.delete(any()) }
     }
 }

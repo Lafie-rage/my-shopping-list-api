@@ -16,8 +16,8 @@ abstract class BaseDao<E : UUIDEntity>(
         entityClass.findById(id)
     }
 
-    suspend fun delete(id: UUID) = getById(id).let { item ->
-        runDbQuery { item?.delete() }
+    suspend fun delete(id: UUID) = getById(id)?.let { item ->
+        runDbQuery { item.delete() }
     }
 
     protected suspend inline fun <T> runDbQuery(crossinline action: () -> T): T =

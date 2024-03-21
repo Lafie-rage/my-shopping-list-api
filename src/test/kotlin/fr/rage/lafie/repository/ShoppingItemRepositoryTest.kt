@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
+import assertk.assertions.isNull
 import fr.rage.lafie.data.database.dao.ShoppingItemDao
 import fr.rage.lafie.data.database.entity.ShoppingItemEntity
 import fr.rage.lafie.data.database.entity.ShoppingListEntity
@@ -89,5 +90,54 @@ class ShoppingItemRepositoryTest {
 
         // Verify
         coVerify { dao.getByShoppingListId(any()) }
+    }
+
+    @Test
+    fun `update an item and check if the changes has been correctly proceeded`() = runTest {
+        // Init
+        val shoppingItem = mockk<ShoppingItemEntity>()
+        val shoppingList = mockk<ShoppingListEntity>()
+
+        // Mock
+        coEvery { dao.update(any(), any(), any(), any()) } returns shoppingItem
+
+        // Exec
+        val result = repository.update(UUID.randomUUID(), "", 0f, "")
+
+        // Assert
+        assertThat(result).isNotNull().isEqualTo(shoppingItem)
+
+        // Verify
+        coVerify { dao.update(any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `delete an existing item and expect it to be deleted`() = runTest {
+        // Mock
+        coEvery { dao.delete(any()) } returns Unit
+
+        // Exec
+        val result = repository.delete(UUID.randomUUID())
+
+        // Assert
+        assertThat(result).isNotNull()
+
+        // Verify
+        coVerify { dao.delete(any()) }
+    }
+
+    @Test
+    fun `delete an nonexistent item and expect the result to be null`() = runTest {
+        // Mock
+        coEvery { dao.delete(any()) } returns null
+
+        // Exec
+        val result = repository.delete(UUID.randomUUID())
+
+        // Assert
+        assertThat(result).isNull()
+
+        // Verify
+        coVerify { dao.delete(any()) }
     }
 }

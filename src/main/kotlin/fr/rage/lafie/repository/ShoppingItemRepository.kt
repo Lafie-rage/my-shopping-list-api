@@ -23,4 +23,13 @@ class ShoppingItemRepository(
     suspend fun getById(id: UUID): ShoppingItemEntity? = dao.getById(id)
     suspend fun getByShoppingListId(shoppingListId: UUID): List<ShoppingItemEntity> =
         dao.getByShoppingListId(shoppingListId)
+
+    suspend fun update(
+        id: UUID,
+        label: String,
+        count: Float,
+        unit: String,
+    ): ShoppingItemEntity? = dao.update(id, label, count, unit)
+
+    suspend fun delete(id: UUID) = dao.delete(id)
 }

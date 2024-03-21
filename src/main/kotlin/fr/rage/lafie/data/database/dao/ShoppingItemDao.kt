@@ -26,6 +26,19 @@ class ShoppingItemDao(
         }
     }
 
+    suspend fun update(
+        id: UUID,
+        label: String,
+        count: Float,
+        unit: String,
+    ): ShoppingItemEntity? = runDbQuery {
+        ShoppingItemEntity.findByIdAndUpdate(id) {
+            it.label = label
+            it.unit = unit
+            it.count = count
+        }
+    }
+
 
     suspend fun getByShoppingListId(shoppingListId: UUID): List<ShoppingItemEntity> = runDbQuery {
         ShoppingItemEntity.find {
